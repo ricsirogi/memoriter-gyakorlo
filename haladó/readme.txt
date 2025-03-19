@@ -1,0 +1,6 @@
+Ha esetleg akkor bukkannál rá erre a repo-ra, amikor még nem működik a weboldal, de nagyon nagyon szeretnél már memoritereket tanulni, akkor itt van egy python script, amit még a weboldal megírása előtt csináltam egy "proof of concept-ként".
+Nem fogom elmagyarázni, hogy hogyan kell futtatni, annyit viszont el kell mondanom, hogy ahhoz, hogy működjön, a main.py file-nak egy mappában kell lennie a poems.json file-al
+Ja és simán lehet, hogy vannak bug-ok ebben a prototípusban
+Ja és ugye mivel ez elég buta, ezért ha egy versben van idézőjel (amit amúgy a ' jellel kell írni), vagy vessző, pont kettőspont stb azt is bele kell írni ha az adott hiányzó szótól nincsen szóközzel elválasztva.
+Ja és oda kell figyelni a kis- és nagybetűkre is, erre gondolom érettségin is kell figyelni, szóval ez benne marad a weboldalban is
+Szerintem senki se fogja ezt elolvasni, és használni, de ha esetleg valahogyan mégis, akkor légyszives jelezz vissza nekem, hogy jobb lehessen a napom, hogy segítettem valakinek :)
