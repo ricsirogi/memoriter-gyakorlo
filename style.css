@@ -1,0 +1,50 @@
+body {
+  background-color: rgb(34, 76, 92);
+  color: white;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  font-variant: small-caps;
+  text-align: center;
+}
+#poem {
+  background-color: rgb(89, 121, 134);
+  width: 50%;
+  border-style: solid;
+  border-radius: 5px;
+}
+#poem-data {
+  margin: 0 auto;
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#poem-data p {
+  padding-left: 10px;
+  margin-right: 10px;
+  font-size: 150%;
+}
+
+div.poem-line {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+span.poem-word {
+  margin-right: 5px;
+}
+
+input {
+  width: 10em;
+  margin-right: 5px;
+}
