@@ -6,25 +6,80 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-width: 100vw;
+  overflow-x: auto;
 }
 h1 {
   font-variant: small-caps;
   text-align: center;
+  width: 100%;
 }
-#poem {
-  background-color: rgb(89, 121, 134);
-  width: 50%;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 10px;
+
+#main-div {
+  display: flex;
+  justify-content: center;
+  align-items: felx-start;
 }
-#poem-data {
-  margin: 0 auto;
-  width: 50%;
+
+#options-div {
+  margin-right: 20px;
+}
+
+#settings-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  font-size: 25px;
+}
+
+#settings-div input {
+  font-size: inherit;
+  border-width: 3px;
+}
+
+#buttons-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  padding: 5%;
+  margin: 5%;
+  font-size: 25px;
+  border-radius: 5em;
+  border-style: solid;
+  color: white;
+  background-color: rgb(70, 109, 124);
+  border-color: rgb(29, 57, 71);
+  border-width: 3px;
+}
+
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.05s;
+}
+
+#poem {
+  background-color: rgb(89, 121, 134);
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 18px;
+  border-color: rgb(29, 57, 71);
+}
+#poem-data {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#poem-div {
+  flex: 1;
 }
 
 #poem-data p {
@@ -46,6 +101,7 @@ h1 {
 
 div.poem-line {
   margin: 5px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -55,10 +111,38 @@ div.poem-line {
 }
 
 span.poem-word {
-  margin-right: 5px;
+  margin-left: 5px;
+}
+
+input.poem-word {
+  padding: 0%;
+  width: 6em;
+  margin-left: 5px;
+}
+
+span.non-letter {
+  margin-left: 0%;
 }
 
 input {
-  width: 10em;
-  margin-right: 5px;
+  background-color: rgb(89, 121, 134);
+  color: white;
+  border-color: rgb(29, 57, 71);
+  border-style: solid;
+  font-size: inherit;
+}
+
+input.checking.correct {
+  background-color: rgb(0, 133, 0);
+}
+
+input.checking.wrong {
+  background-color: rgb(149, 0, 0);
+}
+
+#options-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

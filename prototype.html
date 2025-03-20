@@ -7,41 +7,40 @@
     <title>Memoriter gyakorló</title>
     <link rel="stylesheet" href="style.css">
     <script src="index.js" defer></script>
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            /* Align items vertically */
+        }
+
+        .spacer {
+            padding: 20px;
+            margin-left: 20px
+                /* Pushes div1 to the center */
+        }
+
+        .div1 {
+            background: lightblue;
+            padding: 20px;
+        }
+
+        .div2 {
+            background: lightcoral;
+            padding: 20px;
+            margin-left: 20px;
+            /* Adds space between div1 and div2 */
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Memoriter gyakroló</h1>
-    <div id="poem">
-        <div id="poem-data">
-            <p id="author">Kölcsey Ferenc</p>
-            <p>-</p>
-            <p id="title">Emléklapra</p>
-        </div>
-        <div id="poem-text">
-            <div class="poem-line">
-                <span class="poem-word">Négy </span>
-                <span class="poem-word">szócskát </span>
-                <span class="poem-word">üzenek, </span>
-                <span class="poem-word">vésd </span>
-                <span class="poem-word">jól </span>
-                <input type="text" class="poem-word-input" id="word-0">
-                <!-- <span class="poem-word">kebeledbe,</span> -->
-                <span class="poem-word"> s </span>
-                <span class="poem-word">fiadnak </span>
-            </div>
-            <div class="poem-line">
-                <span class="poem-word">Hagyd </span>
-                <span class="poem-word">örökűl </span>
-                <span class="poem-word">ha </span>
-                <span class="poem-word">kihúnysz: </span>
-                <span class="poem-word">A </span>
-                <input type="text" class="poem-word-input" id="word-0">
-                <!--<span class="poem-word">HAZA</span> -->
-                <span class="poem-word"> MINDEN </span>
-                <span class="poem-word">ELŐTT.</span>
-            </div>
-        </div>
+    <div class="container">
+        <div class="spacer">Div 1</div>
+        <div class="div1">Div 1</div>
+        <div class="div2">Div 2</div>
     </div>
+    <div>Why</div>
 </body>
 
 </html>
