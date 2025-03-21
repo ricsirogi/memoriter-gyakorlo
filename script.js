@@ -22,6 +22,7 @@ let originalWords = [] // In this list every word is present, but they are strip
 let blankedIndexes = [] // Indexes of the words that are blanked out
 let displayedPoem = ""
 let blankWordInputs = []
+let poemCheckboxes = {}
 
 let blankPercent = blankPercentInput.value
 
@@ -45,7 +46,6 @@ function createCheckboxes() {
 
     let poets = Object.keys(poems);
     let half = Math.ceil(poets.length / 2);
-
     let leftColumn = document.createElement("div");
     let rightColumn = document.createElement("div");
 
@@ -89,6 +89,8 @@ function createCheckboxes() {
             poemContainer.appendChild(poemLabel);
 
             poemsContainer.appendChild(poemContainer);
+
+            poemCheckboxes[poem] = poemCheckbox;
         }
 
         poetContainer.appendChild(poemsContainer);
@@ -104,8 +106,6 @@ function createCheckboxes() {
     checkboxContainer.appendChild(rightColumn);
 }
 
-createCheckboxes();
-
 nextButton.addEventListener("click", () => {
     generateRandomPoem()
     makePoem()
@@ -120,12 +120,13 @@ fetch(url)
     })
     .then(data => {
         poems = data;
+        createCheckboxes()
+        console.log("checkboxes created, heres the thing", poemCheckboxes)
         generateRandomPoem();
-        //displayPoem()
         makePoem()
         console.log(words)
         console.log(originalWords)
-        createCheckboxes()
+
         spacerDiv.style.width = checkboxContainer.style.width
         console.log("a", checkboxContainer.style)
     })
@@ -303,9 +304,15 @@ function checkStringForLetter(word) {
 
 function randomPoem() {
     let poets = Object.keys(poems);
-    let poet = poets[Math.floor(Math.random() * poets.length)];
-    let titles = Object.keys(poems[poet]);
-    let title = titles[Math.floor(Math.random() * titles.length)];
+    let poet = ""
+    let titles = {}
+    let title = ""
+    console.log("at randomPoem(), this is checkboxes", poemCheckboxes)
+    while (title === "" || !poemCheckboxes[title].checked) {
+        poet = poets[Math.floor(Math.random() * poets.length)];
+        titles = Object.keys(poems[poet]);
+        title = titles[Math.floor(Math.random() * titles.length)];
+    }
     let poem = poems[poet][title];
     return { poet, title, poem };
 }
