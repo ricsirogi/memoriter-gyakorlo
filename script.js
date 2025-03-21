@@ -223,6 +223,9 @@ function createCheckboxes() {
 
         let poemNames = Object.keys(poems[poet]);
         for (let j = 0; j < poemNames.length; j++) {
+            if (poemNames[j] === "dates") {
+                continue;
+            }
             let poem = poemNames[j];
             let poemCheckbox = document.createElement("input");
             poemCheckbox.type = "checkbox";
@@ -286,11 +289,9 @@ function makePoem() {
     // takes the current poem variables and generates the poem making divs for each line and spans for each word
     // returns the div containing the poem
 
-    poemTextDiv.innerHTML = "";
     authorP.innerText = poemData.poet;
     titleP.innerText = poemData.title;
-    dateP.innerText = poemData.poet.date.title;
-
+    dateP.innerText = poemData.date
     authorP.style.width = "auto";
     titleP.style.width = "auto";
 
@@ -301,19 +302,22 @@ function makePoem() {
     authorP.style.width = maxWidth + "px";
     titleP.style.width = maxWidth + "px";
 
+    let tempDiv = document.createDocumentFragment();
     let fromIndex = 0;
     for (let i = 0; i < words.length; i++) {
         if (words[i] === "\n") {
             let line = generateLine(words.slice(fromIndex, i), fromIndex);
-            poemTextDiv.appendChild(line);
+            tempDiv.appendChild(line);
             fromIndex = i + 1; // Move to the next word after the newline
         }
     }
     // Process the last line if there is no trailing newline
     if (fromIndex < words.length) {
         let line = generateLine(words.slice(fromIndex), fromIndex);
-        poemTextDiv.appendChild(line);
+        tempDiv.appendChild(line);
     }
+    // Replace the children instead of setting innerHTML (avoids flicker)
+    poemTextDiv.replaceChildren(...tempDiv.childNodes);
 }
 
 function generateLine(words, index) {
@@ -448,8 +452,10 @@ function randomPoem() {
     let poet = ""
     let titles = {}
     let title = ""
+    let date = ""
+
     let count = 0
-    while (title === "" || !titleCheckboxes[title].checked) {
+    while (title === "" || title === "dates" || !titleCheckboxes[title].checked) {
         if (count > 1000) {
             console.log("No poem found")
             break
@@ -457,10 +463,12 @@ function randomPoem() {
         poet = poets[Math.floor(Math.random() * poets.length)];
         titles = Object.keys(poems[poet]);
         title = titles[Math.floor(Math.random() * titles.length)];
+        date = poems[poet]["dates"][title];
+
         count++
     }
     let poem = poems[poet][title];
-    return { poet, title, poem };
+    return { poet, title, poem, date };
 }
 
 function getWords(poem) {
