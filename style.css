@@ -18,11 +18,7 @@ h1 {
 #main-div {
   display: flex;
   justify-content: center;
-  align-items: felx-start;
-}
-
-#options-div {
-  margin-right: 20px;
+  align-items: flex-start;
 }
 
 #settings-div {
@@ -70,20 +66,9 @@ button:active {
   font-size: 18px;
   border-color: rgb(29, 57, 71);
 }
-#poem-data {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
 
 #poem-div {
   flex: 1;
-}
-
-#poem-data p {
-  text-align: center;
 }
 
 #poem-text {
@@ -93,10 +78,41 @@ button:active {
   align-items: center;
 }
 
+#poem-data {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
+
 #poem-data p {
+  text-align: center;
+  margin-bottom: 5px;
   padding-left: 10px;
   margin-right: 10px;
   font-size: 150%;
+}
+
+#author-title-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#author-title-div #author {
+  text-align: right;
+}
+
+#author-title-div #title {
+  text-align: left;
+}
+
+#year {
+  font-size: 100% !important;
+  margin-top: 0px;
 }
 
 div.poem-line {
@@ -140,9 +156,21 @@ input.checking.wrong {
   background-color: rgb(149, 0, 0);
 }
 
-#options-div {
+#option-rows {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+}
+
+#options-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20px;
+}
+
+#select-all-options-button {
+  font-size: 100%;
 }

@@ -9,4 +9,3 @@ Nem fogok szenvedni azzal, hogy telefonon is működjön, igaz akkor sokkal töb
 # TODO
 
 - [ ] add dates to every poem
-- [ ] Fix halotti beszéd és könyörgés overflowing to the left and not being able to scroll to it

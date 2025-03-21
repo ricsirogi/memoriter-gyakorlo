@@ -8,9 +8,11 @@ let checkButton = document.getElementById("check-button");
 let poemDiv = document.getElementById("poem");
 let authorP = document.getElementById("author");
 let titleP = document.getElementById("title");
+let dateP = document.getElementById("year");
 let poemTextDiv = document.getElementById("poem-text");
 let spacerDiv = document.getElementById("spacer-div")
-let checkboxContainer = document.getElementById("options-div");
+let checkboxContainer = document.getElementById("option-rows");
+let selectAllOptionsButton = document.getElementById("select-all-options-button");
 
 const DEFAULT_BLANK_PERCENT = 15;
 const BLANK_PERCENT_MIN = 5;
@@ -22,7 +24,9 @@ let originalWords = [] // In this list every word is present, but they are strip
 let blankedIndexes = [] // Indexes of the words that are blanked out
 let displayedPoem = ""
 let blankWordInputs = []
-let poemCheckboxes = {}
+let poetCheckboxes = {}
+let titleCheckboxes = {}
+let allCheckboxesStatus = true // Used with the selectAllOptionsButton, so all checkboxes can be toggled on or off
 
 let blankPercent = blankPercentInput.value
 
@@ -41,6 +45,144 @@ checkButton.addEventListener("click", () => {
     switchChecking(true)
 })
 
+
+nextButton.addEventListener("click", () => {
+    generateRandomPoem()
+    makePoem()
+    console.clear();
+    console.log(words)
+    console.log(originalWords)
+})
+
+selectAllOptionsButton.addEventListener("click", () => {
+    titleKeys = Object.keys(titleCheckboxes)
+    for (let i = 0; i < titleKeys.length; i++) {
+        let checkbox = titleCheckboxes[titleKeys[i]]
+        let event = new Event('change');
+        if (allCheckboxesStatus) {
+            checkbox.checked = false
+        }
+        else {
+            checkbox.checked = true
+        }
+        checkbox.dispatchEvent(event);
+    }
+    if (allCheckboxesStatus) {
+        allCheckboxesStatus = false
+    }
+    else {
+        allCheckboxesStatus = true
+    }
+})
+
+window.addEventListener('load', () => {
+
+    fetch(url)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            poems = data;
+            createCheckboxes()
+            loadCheckboxStatuses();
+            generateRandomPoem();
+            makePoem()
+            console.log(words)
+            console.log(originalWords)
+
+            spacerDiv.style.width = checkboxContainer.getBoundingClientRect().width + "px"
+        })
+        .catch(error => console.error('Error fetching the poems:', error));
+});
+
+
+
+// Save checkbox statuses to localStorage
+function saveCheckboxStatuses() {
+    let statuses = { "poets": {}, "titles": {} };
+    for (const [title, checkbox] of Object.entries(titleCheckboxes)) {
+        statuses["titles"][title] = checkbox.checked;
+    }
+    for (const [poet, checkbox] of Object.entries(poetCheckboxes)) {
+        statuses["poets"][poet] = checkbox.checked;
+    }
+    console.log('Saving statuses:', statuses); // Debugging log
+    localStorage.setItem('checkboxStatuses', JSON.stringify(statuses));
+}
+// Load checkbox statuses from localStorage
+function loadCheckboxStatuses() {
+    let statuses = JSON.parse(localStorage.getItem('checkboxStatuses'));
+    console.log('Loading statuses:', JSON.stringify(statuses, null, 2)); // Debugging log
+    if (statuses) {
+        for (const [title, checked] of Object.entries(statuses.titles)) {
+            if (titleCheckboxes[title]) {
+                titleCheckboxes[title].checked = checked;
+            }
+            console.log("checking titles")
+        }
+        for (const [poet, checked] of Object.entries(statuses.poets)) {
+            if (poetCheckboxes[poet]) {
+                poetCheckboxes[poet].checked = checked;
+            }
+            console.log("checking poets")
+        }
+    }
+}
+
+function getPoetCheckbox(poemCheckbox) {
+    let parent = poemCheckbox.parentElement;
+    while (parent) {
+        let poetCheckbox = parent.querySelector(`input[type="checkbox"][id^="poet-"]`);
+        if (poetCheckbox) {
+            return poetCheckbox;
+        }
+        parent = parent.parentElement;
+    }
+    return null;
+}
+
+function getChildCheckboxes(parentCheckbox) {
+    // Find the parent container of the parent checkbox
+    let parentContainer = parentCheckbox.parentElement;
+    while (parentContainer && !parentContainer.querySelector(`input[type="checkbox"][id^="poet-"]`)) {
+        parentContainer = parentContainer.parentElement;
+    }
+
+    // If the parent container is found, get all child checkboxes
+    if (parentContainer) {
+        return Array.from(parentContainer.querySelectorAll(`input[type="checkbox"][id^="poem-"]`));
+    }
+
+    return [];
+}
+
+function areAllChildrenUnchecked(parent) {
+    let checkboxes = getChildCheckboxes(parent);
+    for (let i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function areAllCheckboxesUnchecked() {
+    poets = Object.keys(poems);
+    for (let i = 0; i < poets.length; i++) {
+        if (poetCheckboxes[poets[i]].checked) {
+            return false;
+        }
+    }
+    return true
+}
+
+function recheckIfAllUnchecked(checkbox) {
+    // checks this checkbox, if all checkboxes are unchecked
+    if (areAllCheckboxesUnchecked()) {
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change'));
+    }
+}
 function createCheckboxes() {
     checkboxContainer.innerHTML = ""; // Clear previous checkboxes
 
@@ -60,7 +202,13 @@ function createCheckboxes() {
             poemCheckboxes.forEach(poemCheckbox => {
                 poemCheckbox.checked = poetCheckbox.checked;
             });
+            saveCheckboxStatuses();
+
+            // if this is the last checkbox that was checked, then don't let be checked out, because the site will break
+            recheckIfAllUnchecked(poetCheckbox)
         });
+        poetCheckboxes[poet] = poetCheckbox;
+
         let poetLabel = document.createElement("label");
         poetLabel.htmlFor = `poet-${poet}`;
         poetLabel.innerText = poet;
@@ -90,7 +238,15 @@ function createCheckboxes() {
 
             poemsContainer.appendChild(poemContainer);
 
-            poemCheckboxes[poem] = poemCheckbox;
+            titleCheckboxes[poem] = poemCheckbox;
+            poemCheckbox.addEventListener("change", () => {
+                let parent = getPoetCheckbox(poemCheckbox)
+                if (parent) {
+                    parent.checked = !areAllChildrenUnchecked(parent);
+                    saveCheckboxStatuses();
+                }
+                recheckIfAllUnchecked(poemCheckbox)
+            })
         }
 
         poetContainer.appendChild(poemsContainer);
@@ -105,32 +261,6 @@ function createCheckboxes() {
     checkboxContainer.appendChild(leftColumn);
     checkboxContainer.appendChild(rightColumn);
 }
-
-nextButton.addEventListener("click", () => {
-    generateRandomPoem()
-    makePoem()
-    console.clear();
-    console.log(words)
-    console.log(originalWords)
-})
-
-fetch(url)
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        poems = data;
-        createCheckboxes()
-        console.log("checkboxes created, heres the thing", poemCheckboxes)
-        generateRandomPoem();
-        makePoem()
-        console.log(words)
-        console.log(originalWords)
-
-        spacerDiv.style.width = checkboxContainer.style.width
-        console.log("a", checkboxContainer.style)
-    })
-    .catch(error => console.error('Error fetching the poems:', error));
 
 function isInputCorrect(input) {
     return input.classList.contains("correct")
@@ -159,6 +289,17 @@ function makePoem() {
     poemTextDiv.innerHTML = "";
     authorP.innerText = poemData.poet;
     titleP.innerText = poemData.title;
+    dateP.innerText = poemData.poet.date.title;
+
+    authorP.style.width = "auto";
+    titleP.style.width = "auto";
+
+    let authorPWidth = authorP.getBoundingClientRect().width
+    let titleWidth = titleP.getBoundingClientRect().width
+
+    let maxWidth = Math.max(authorPWidth, titleWidth);
+    authorP.style.width = maxWidth + "px";
+    titleP.style.width = maxWidth + "px";
 
     let fromIndex = 0;
     for (let i = 0; i < words.length; i++) {
@@ -307,11 +448,16 @@ function randomPoem() {
     let poet = ""
     let titles = {}
     let title = ""
-    console.log("at randomPoem(), this is checkboxes", poemCheckboxes)
-    while (title === "" || !poemCheckboxes[title].checked) {
+    let count = 0
+    while (title === "" || !titleCheckboxes[title].checked) {
+        if (count > 1000) {
+            console.log("No poem found")
+            break
+        }
         poet = poets[Math.floor(Math.random() * poets.length)];
         titles = Object.keys(poems[poet]);
         title = titles[Math.floor(Math.random() * titles.length)];
+        count++
     }
     let poem = poems[poet][title];
     return { poet, title, poem };
